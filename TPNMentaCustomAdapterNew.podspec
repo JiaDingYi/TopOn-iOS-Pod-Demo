@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
     s.homepage         = 'https://github.com/jdy/TopOnDemo-global'
     s.license          = "Custom"
     s.author           = { 'jdy' => 'wzy2010416033@163.com' }
-    s.source           = { :git => "https://github.com/vlion-menta/TopOn-iOS-Pod-Demo.git", :tag => "#{s.version}"}
+    s.source           = { :git => "https://github.com/JiaDingYi/TopOn-iOS-Pod-Demo.git", :tag => "#{s.version}"}
   
     s.static_framework = true
     s.ios.deployment_target = '11.0'
