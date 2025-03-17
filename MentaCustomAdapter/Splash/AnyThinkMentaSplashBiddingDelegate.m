@@ -6,7 +6,7 @@
 //
 
 #import "AnyThinkMentaSplashBiddingDelegate.h"
-#import <MentaUnifiedSDK/MentaUnifiedSDK.h>
+#import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
 #import "AnyThinkMentaBiddingManager.h"
 
 @interface AnyThinkMentaSplashBiddingDelegate () <MentaUnifiedSplashAdDelegate>

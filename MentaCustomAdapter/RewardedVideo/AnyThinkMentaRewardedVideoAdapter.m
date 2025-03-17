@@ -6,7 +6,7 @@
 //
 
 #import "AnyThinkMentaRewardedVideoAdapter.h"
-#import <MentaUnifiedSDK/MentaUnifiedSDK.h>
+#import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
 #import "AnyThinkMentaRewardedVideoCustomEvent.h"
 #import "AnyThinkMentaBiddingManager.h"
 

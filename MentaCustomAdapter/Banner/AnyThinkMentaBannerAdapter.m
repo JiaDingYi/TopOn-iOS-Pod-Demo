@@ -8,7 +8,7 @@
 #import "AnyThinkMentaBannerAdapter.h"
 #import "AnyThinkMentaBiddingManager.h"
 #import "AnyThinkMentaBannerCustomEvent.h"
-#import <MentaUnifiedSDK/MentaUnifiedSDK.h>
+#import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
 
 @interface AnyThinkMentaBannerAdapter ()
 

@@ -6,7 +6,7 @@
 //
 
 #import "AnyThinkMentaSplashAdapter.h"
-#import <MentaUnifiedSDK/MentaUnifiedSDK.h>
+#import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
 #import "AnyThinkMentaSplashCustomEvent.h"
 #import "AnyThinkMentaBiddingManager.h"
 #import "AnyThinkMentaSplashBiddingDelegate.h"
