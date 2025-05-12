@@ -42,7 +42,7 @@ target 'AnyThinkSDKDemo' do
   #  pod 'MentaUnifiedSDK',   '6.00.30'
   #  pod 'MentaVlionSDK',     '6.00.30'
   #  pod 'MentaVlionAdapter', '6.00.30'
-   pod 'MentaKSAdapter',    '6.00.31'
+  #  pod 'MentaKSAdapter',    '6.00.31'
    
   
 #  pod 'MentaUnifiedSDK',    :path => '/Users/throwexception/Desktop/Menta-iOS/MentaUnifiedSDK.podspec'
