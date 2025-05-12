@@ -215,7 +215,6 @@
     config.slotId = slotID;
     config.adSize = [UIScreen mainScreen].bounds.size;
     config.tolerateTime = 5;
-    config.materialFillMode = MentaSplashAdMaterialFillMode_ScaleAspectFill;
     if (bottomView && [bottomView isKindOfClass:[UIView class]]) {
         config.bottomView = (UIView *)bottomView;
     }
