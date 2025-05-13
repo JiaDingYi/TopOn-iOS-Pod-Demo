@@ -35,7 +35,7 @@ target 'AnyThinkSDKDemo' do
   # pod 'AnyThinkiOS','6.3.62'
   # pod 'AnyThinkMentaCustomAdapter', :path => '../AnyThinkMentaCustomAdapter.podspec'
   pod 'AnyThinkMentaCustomAdapterInland', :path => '../AnyThinkMentaCustomAdapterInland.podspec'
-  pod 'AnyThinkKuaiShouSDKAdapter','6.4.55'
+  # pod 'AnyThinkKuaiShouSDKAdapter','6.4.55'
 #  pod 'TPNMentaCustomAdapterInland', :path => '../TPNMentaCustomAdapterInland.podspec'
   
   #  pod 'MentaVlionBaseSDK', '6.00.30'
