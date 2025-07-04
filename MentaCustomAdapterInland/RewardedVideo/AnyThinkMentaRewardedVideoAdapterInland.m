@@ -9,6 +9,7 @@
 #import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
 #import "AnyThinkMentaRewardedVideoCustomEventInland.h"
 #import "AnyThinkMentaBiddingManagerInland.h"
+#import <MentaVlionBaseSDK/MVlionLog.h>
 
 @interface AnyThinkMentaRewardedVideoAdapterInland ()
 

@@ -8,6 +8,7 @@
 #import "AnyThinkMentaNativeRenderInland.h"
 #import <AnyThinkSDK/AnyThinkSDK.h>
 #import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
+#import <MentaVlionBaseSDK/MVlionLog.h>
 
 @protocol ATNativeADView<NSObject>
 @property (nonatomic, readonly) ATNativeADCache *nativeAd;

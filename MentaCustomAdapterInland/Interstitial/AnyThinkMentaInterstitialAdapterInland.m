@@ -9,6 +9,7 @@
 #import "AnyThinkMentaBiddingManagerInland.h"
 #import "AnyThinkMentaInterstitialCustomEventInland.h"
 #import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
+#import <MentaVlionBaseSDK/MVlionLog.h>
 
 @interface AnyThinkMentaInterstitialAdapterInland ()
 

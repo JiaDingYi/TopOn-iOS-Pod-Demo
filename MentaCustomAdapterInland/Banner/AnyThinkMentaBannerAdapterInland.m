@@ -9,6 +9,7 @@
 #import "AnyThinkMentaBiddingManagerInland.h"
 #import "AnyThinkMentaBannerCustomEventInland.h"
 #import <MentaUnifiedSDK/MentaUnifiedSDK-umbrella.h>
+#import <MentaVlionBaseSDK/MentaVlionBaseSDK-umbrella.h>
 
 @interface AnyThinkMentaBannerAdapterInland ()
 

@@ -7,6 +7,7 @@
 
 #import "AnyThinkMentaBannerCustomEventInland.h"
 #import "AnyThinkMentaBiddingManagerInland.h"
+#import <MentaVlionBaseSDK/MVlionLog.h>
 
 @interface AnyThinkMentaBannerCustomEventInland ()
 

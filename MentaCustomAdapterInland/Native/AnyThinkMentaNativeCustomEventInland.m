@@ -8,6 +8,7 @@
 #import "AnyThinkMentaNativeCustomEventInland.h"
 #import "AnyThinkMentaBiddingManagerInland.h"
 #import "AnyThinkMentaBiddingRequestInland.h"
+#import <MentaVlionBaseSDK/MVlionLog.h>
 
 @implementation AnyThinkMentaNativeCustomEventInland
 
