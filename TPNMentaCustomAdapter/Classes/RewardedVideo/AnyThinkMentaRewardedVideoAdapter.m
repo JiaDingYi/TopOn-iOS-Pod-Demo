@@ -8,6 +8,7 @@
 #import "AnyThinkMentaRewardedVideoAdapter.h"
 #import "AnyThinkMentaRewardedVideoCustomEvent.h"
 #import "AnyThinkMentaBiddingManager.h"
+#import "AnyThinkMentaParam.h"
 #import <MentaMediationGlobal/MentaMediationGlobal-umbrella.h>
 
 @interface AnyThinkMentaRewardedVideoAdapter ()
@@ -37,18 +38,15 @@
 }
 
 - (instancetype)initWithNetworkCustomInfo:(NSDictionary*)serverInfo localInfo:(NSDictionary*)localInfo {
-    self = [super init];
-    if (self != nil) {
-        [[MentaAdSDK shared] setLogLevel:kMentaLogLevelDebug];
-        NSString *appIDKey = @"appid";
-        if([serverInfo.allKeys containsObject:@"appId"]) {
-            appIDKey = @"appId";
-        }
-        NSString *appID = serverInfo[appIDKey];
-        NSString *appKey = serverInfo[@"appKey"];
-        
-        if (![[MentaAdSDK shared] isInitialized]) {
-            [AnyThinkMentaRewardedVideoAdapter initMentaSDKWith:appID Key:appKey completion:nil];
+    if (self = [super init]) {
+        AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+        NSError *appError = param.appError;
+        if (!appError) {
+            if (![[MentaAdSDK shared] isInitialized]) {
+                [AnyThinkMentaRewardedVideoAdapter initMentaSDKWith:param.appId Key:param.appKey completion:nil];
+            }
+        } else {
+            NSLog(@"%s . %@", __func__, appError);
         }
     }
     return self;
@@ -57,14 +55,16 @@
 - (void)loadADWithInfo:(NSDictionary*)serverInfo 
              localInfo:(NSDictionary*)localInfo
             completion:(void (^)(NSArray<NSDictionary *> *, NSError *))completion {
-    
-    NSString *appIDKey = @"appid";
-    if([serverInfo.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = serverInfo[appIDKey];
-    NSString *appKey = serverInfo[@"appKey"];
-    NSString *slotID = serverInfo[@"slotID"];
     NSString *bidId = serverInfo[kATAdapterCustomInfoBuyeruIdKey];
     
     __weak __typeof(self)weakSelf = self;
@@ -72,7 +72,7 @@
         __strong __typeof(weakSelf)strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (bidId) {
-                AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingManager sharedInstance] getRequestItemWithUnitID:slotID];
+                AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingManager sharedInstance] getRequestItemWithUnitID:param.slotId];
                 if (request != nil && request.customObject) {
                     strongSelf.customEvent = (AnyThinkMentaRewardedVideoCustomEvent *)request.customEvent;
                     strongSelf.customEvent.requestCompletionBlock = completion;
@@ -81,16 +81,16 @@
                     if (strongSelf.customEvent.isReady) {
                         [strongSelf.customEvent trackRewardedVideoAdLoaded:strongSelf.rewardedVideo adExtra:nil];
                     }
-                    [[AnyThinkMentaBiddingManager sharedInstance] removeRequestItmeWithUnitID:slotID];
+                    [[AnyThinkMentaBiddingManager sharedInstance] removeRequestItmeWithUnitID:param.slotId];
                     return;
                 }
             } else {
                 strongSelf.customEvent = [[AnyThinkMentaRewardedVideoCustomEvent alloc] initWithInfo:serverInfo localInfo:localInfo];
-                strongSelf.customEvent.networkAdvertisingID = slotID;
+                strongSelf.customEvent.networkAdvertisingID = param.slotId;
                 strongSelf.customEvent.requestCompletionBlock = completion;
                 strongSelf.customEvent.customEventMetaDataDidLoadedBlock = strongSelf.metaDataDidLoadedBlock;
                 
-                strongSelf.rewardedVideo = [[MentaMediationRewardVideo alloc] initWithPlacementID:slotID];
+                strongSelf.rewardedVideo = [[MentaMediationRewardVideo alloc] initWithPlacementID:param.slotId];
                 strongSelf.rewardedVideo.delegate = strongSelf.customEvent;
                 
                 [strongSelf.rewardedVideo loadAd];
@@ -101,7 +101,7 @@
     if ([[MentaAdSDK shared] isInitialized]) {
         load();
     } else {
-        [AnyThinkMentaRewardedVideoAdapter initMentaSDKWith:appID Key:appKey completion:^{
+        [AnyThinkMentaRewardedVideoAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
             load();
         }];
     }
@@ -113,29 +113,32 @@
                                 info:(nonnull NSDictionary *)info
                           completion:(nonnull void (^)(ATBidInfo * _Nonnull, NSError * _Nonnull))completion {
     NSLog(@"------> menta start bidding");
-    NSString *appIDKey = @"appid";
-    if([info.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:info];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = info[appIDKey];
-    NSString *appKey = info[@"appKey"];
-    NSString *slotID = info[@"slotID"];
     
     void(^startRequest)(void) = ^{
         AnyThinkMentaRewardedVideoCustomEvent *customEvent = [[AnyThinkMentaRewardedVideoCustomEvent alloc] initWithInfo:info localInfo:info];
         customEvent.isC2SBiding = YES;
-        customEvent.networkAdvertisingID = slotID;
+        customEvent.networkAdvertisingID = param.slotId;
         
         AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingRequest alloc] init];
         request.unitGroup = unitGroupModel;
         request.placementID = placementModel.placementID;
         request.customEvent = customEvent;
         request.bidCompletion = completion;
-        request.unitID = slotID;
+        request.unitID = param.slotId;
         request.extraInfo = info;
         request.adType = MentaAdFormatRewardedVideo;
         
-        MentaMediationRewardVideo *rewardVideoAd = [[MentaMediationRewardVideo alloc] initWithPlacementID:slotID];
+        MentaMediationRewardVideo *rewardVideoAd = [[MentaMediationRewardVideo alloc] initWithPlacementID:param.slotId];
         rewardVideoAd.delegate = customEvent;
         
         request.customObject = rewardVideoAd;
@@ -146,7 +149,7 @@
     if ([[MentaAdSDK shared] isInitialized]) {
         startRequest();
     } else {
-        [AnyThinkMentaRewardedVideoAdapter initMentaSDKWith:appID Key:appKey completion:^{
+        [AnyThinkMentaRewardedVideoAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
             startRequest();
         }];
     }

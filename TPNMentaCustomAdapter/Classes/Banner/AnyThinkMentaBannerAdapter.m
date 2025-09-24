@@ -8,6 +8,7 @@
 #import "AnyThinkMentaBannerAdapter.h"
 #import "AnyThinkMentaBiddingManager.h"
 #import "AnyThinkMentaBannerCustomEvent.h"
+#import "AnyThinkMentaParam.h"
 #import <MentaMediationGlobal/MentaMediationGlobal-umbrella.h>
 
 @interface AnyThinkMentaBannerAdapter ()
@@ -19,17 +20,16 @@
 
 @implementation AnyThinkMentaBannerAdapter
 
--(instancetype) initWithNetworkCustomInfo:(NSDictionary*)serverInfo localInfo:(NSDictionary*)localInfo {
-    self = [super init];
-    if (self != nil) {
-        NSString *appIDKey = @"appid";
-        if([serverInfo.allKeys containsObject:@"appId"]) {
-            appIDKey = @"appId";
-        }
-        NSString *appID = serverInfo[appIDKey];
-        NSString *appKey = serverInfo[@"appKey"];
-        if (![[MentaAdSDK shared] isInitialized]) {
-            [AnyThinkMentaBannerAdapter initMentaSDKWith:appID Key:appKey completion:nil];
+- (instancetype)initWithNetworkCustomInfo:(NSDictionary*)serverInfo localInfo:(NSDictionary*)localInfo {
+    if (self = [super init]) {
+        AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+        NSError *appError = param.appError;
+        if (!appError) {
+            if (![[MentaAdSDK shared] isInitialized]) {
+                [AnyThinkMentaBannerAdapter initMentaSDKWith:param.appId Key:param.appKey completion:nil];
+            }
+        } else {
+            NSLog(@"%s . %@", __func__, appError);
         }
     }
     return self;
@@ -38,14 +38,16 @@
 -(void)loadADWithInfo:(NSDictionary*)serverInfo
             localInfo:(NSDictionary*)localInfo
            completion:(void (^)(NSArray<NSDictionary *> *, NSError *))completion {
-    
-    NSString *appIDKey = @"appid";
-    if([serverInfo.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = serverInfo[appIDKey];
-    NSString *appKey = serverInfo[@"appKey"];
-    NSString *slotID = serverInfo[@"slotID"];
     
     CGFloat width = 320;
     CGFloat height = 50;
@@ -79,11 +81,11 @@
             strongSelf.customEvent = [[AnyThinkMentaBannerCustomEvent alloc] initWithInfo:serverInfo localInfo:localInfo];
             strongSelf.customEvent.width = width;
             strongSelf.customEvent.height = height;
-            strongSelf.customEvent.networkAdvertisingID = slotID;
+            strongSelf.customEvent.networkAdvertisingID = param.slotId;
             strongSelf.customEvent.requestCompletionBlock = completion;
             strongSelf.customEvent.UUID = requestUUID;
 
-            strongSelf.bannerAd = [[MentaMediationBanner alloc] initWithPlacementID:slotID];
+            strongSelf.bannerAd = [[MentaMediationBanner alloc] initWithPlacementID:param.slotId];
             strongSelf.bannerAd.delegate = strongSelf.customEvent;
             [strongSelf.bannerAd loadAd];
         });
@@ -92,7 +94,7 @@
     if ([[MentaAdSDK shared] isInitialized]) {
         load();
     } else {
-        [AnyThinkMentaBannerAdapter initMentaSDKWith:appID Key:appKey completion:^{
+        [AnyThinkMentaBannerAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
             load();
         }];
     }
@@ -103,14 +105,16 @@
                       unitGroupModel:(nonnull ATUnitGroupModel *)unitGroupModel
                                 info:(nonnull NSDictionary *)info
                           completion:(nonnull void (^)(ATBidInfo * _Nonnull, NSError * _Nonnull))completion {
-    
-    NSString *appIDKey = @"appid";
-    if([info.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:info];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = info[appIDKey];
-    NSString *appKey = info[@"appKey"];
-    NSString *slotID = info[@"slotID"];
     
     CGFloat width = 320;
     CGFloat height = 50;
@@ -123,12 +127,12 @@
     
     NSString *requestUUID = info[@"tracking_info_request_id"];
     
-    [AnyThinkMentaBannerAdapter initMentaSDKWith:appID Key:appKey completion:^{
+    [AnyThinkMentaBannerAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
         AnyThinkMentaBannerCustomEvent *customEvent = [[AnyThinkMentaBannerCustomEvent alloc] initWithInfo:info localInfo:info];
         customEvent.width = width;
         customEvent.height = height;
         customEvent.isC2SBiding = YES;
-        customEvent.networkAdvertisingID = slotID;
+        customEvent.networkAdvertisingID = param.slotId;
         customEvent.UUID = requestUUID;
         
         AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingRequest alloc] init];
@@ -136,12 +140,12 @@
         request.placementID = placementModel.placementID;
         request.customEvent = customEvent;
         request.bidCompletion = completion;
-        request.unitID = slotID;
+        request.unitID = param.slotId;
         request.extraInfo = info;
         request.adType = MentaAdFormatBanner;
         request.UUID = requestUUID;
         
-        MentaMediationBanner *bannerAd = [[MentaMediationBanner alloc] initWithPlacementID:slotID];
+        MentaMediationBanner *bannerAd = [[MentaMediationBanner alloc] initWithPlacementID:param.slotId];
         bannerAd.delegate = customEvent;
         
         request.customObject = bannerAd;

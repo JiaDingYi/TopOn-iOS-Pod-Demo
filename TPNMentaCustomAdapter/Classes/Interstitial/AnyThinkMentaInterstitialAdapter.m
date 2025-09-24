@@ -8,6 +8,7 @@
 #import "AnyThinkMentaInterstitialAdapter.h"
 #import "AnyThinkMentaBiddingManager.h"
 #import "AnyThinkMentaInterstitialCustomEvent.h"
+#import "AnyThinkMentaParam.h"
 #import <MentaMediationGlobal/MentaMediationGlobal-umbrella.h>
 
 @interface AnyThinkMentaInterstitialAdapter ()
@@ -36,31 +37,32 @@
     [((MentaMediationInterstitial *)interstitial.customObject) showAdFromRootViewController:viewController];
 }
 - (instancetype)initWithNetworkCustomInfo:(NSDictionary*)serverInfo localInfo:(NSDictionary*)localInfo {
-    self = [super init];
-    if (self != nil) {
-        NSString *appIDKey = @"appid";
-        if([serverInfo.allKeys containsObject:@"appId"]) {
-            appIDKey = @"appId";
-        }
-        NSString *appID = serverInfo[appIDKey];
-        NSString *appKey = serverInfo[@"appKey"];
-        
-        if (![[MentaAdSDK shared] isInitialized]) {
-            [AnyThinkMentaInterstitialAdapter initMentaSDKWith:appID Key:appKey completion:nil];
+    if (self = [super init]) {
+        AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+        NSError *appError = param.appError;
+        if (!appError) {
+            if (![[MentaAdSDK shared] isInitialized]) {
+                [AnyThinkMentaInterstitialAdapter initMentaSDKWith:param.appId Key:param.appKey completion:nil];
+            }
+        } else {
+            NSLog(@"%s . %@", __func__, appError);
         }
     }
     return self;
 }
 
 - (void)loadADWithInfo:(NSDictionary*)serverInfo localInfo:(NSDictionary*)localInfo completion:(void (^)(NSArray<NSDictionary *> *, NSError *))completion {
-    
-    NSString *appIDKey = @"appid";
-    if([serverInfo.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = serverInfo[appIDKey];
-    NSString *appKey = serverInfo[@"appKey"];
-    NSString *slotID = serverInfo[@"slotID"];
+    
     NSString *bidId = serverInfo[kATAdapterCustomInfoBuyeruIdKey];
     
     __weak __typeof(self)weakSelf = self;
@@ -68,7 +70,7 @@
         __strong __typeof(weakSelf)strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (bidId) {
-                AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingManager sharedInstance] getRequestItemWithUnitID:slotID];
+                AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingManager sharedInstance] getRequestItemWithUnitID:param.slotId];
                 if (request != nil && request.customObject) {
                     strongSelf.customEvent = (AnyThinkMentaInterstitialCustomEvent *)request.customEvent;
                     strongSelf.customEvent.requestCompletionBlock = completion;
@@ -76,13 +78,13 @@
                     strongSelf.interstitialAd = (MentaMediationInterstitial *)request.customObject;
                     [strongSelf.customEvent trackInterstitialAdLoaded:self.interstitialAd adExtra:nil];
                 }
-                [[AnyThinkMentaBiddingManager sharedInstance] removeRequestItmeWithUnitID:slotID];
+                [[AnyThinkMentaBiddingManager sharedInstance] removeRequestItmeWithUnitID:param.slotId];
             } else {
                 strongSelf.customEvent = [[AnyThinkMentaInterstitialCustomEvent alloc] initWithInfo:serverInfo localInfo:localInfo];
-                strongSelf.customEvent.networkAdvertisingID = slotID;
+                strongSelf.customEvent.networkAdvertisingID = param.slotId;
                 strongSelf.customEvent.requestCompletionBlock = completion;
 
-                strongSelf.interstitialAd = [[MentaMediationInterstitial alloc] initWithPlacementID:slotID];
+                strongSelf.interstitialAd = [[MentaMediationInterstitial alloc] initWithPlacementID:param.slotId];
                 strongSelf.interstitialAd.delegate = strongSelf.customEvent;
                 [strongSelf.interstitialAd loadAd];
             }
@@ -92,7 +94,7 @@
     if ([[MentaAdSDK shared] isInitialized]) {
         load();
     } else {
-        [AnyThinkMentaInterstitialAdapter initMentaSDKWith:appID Key:appKey completion:^{
+        [AnyThinkMentaInterstitialAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
             load();
         }];
     }
@@ -103,31 +105,33 @@
                       unitGroupModel:(nonnull ATUnitGroupModel *)unitGroupModel
                                 info:(nonnull NSDictionary *)info
                           completion:(nonnull void (^)(ATBidInfo * _Nonnull, NSError * _Nonnull))completion {
-    
     NSLog(@"------> menta start bidding");
-    NSString *appIDKey = @"appid";
-    if([info.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:info];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = info[appIDKey];
-    NSString *appKey = info[@"appKey"];
-    NSString *slotID = info[@"slotID"];
     
     void(^startBiddingRequest)(void) = ^{
         AnyThinkMentaInterstitialCustomEvent *customEvent = [[AnyThinkMentaInterstitialCustomEvent alloc] initWithInfo:info localInfo:info];
         customEvent.isC2SBiding = YES;
-        customEvent.networkAdvertisingID = slotID;
+        customEvent.networkAdvertisingID = param.slotId;
         
         AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingRequest alloc] init];
         request.unitGroup = unitGroupModel;
         request.placementID = placementModel.placementID;
         request.customEvent = customEvent;
         request.bidCompletion = completion;
-        request.unitID = slotID;
+        request.unitID = param.slotId;
         request.extraInfo = info;
         request.adType = MentaAdFormatInterstitial;
 
-        MentaMediationInterstitial *interstitialAd = [[MentaMediationInterstitial alloc] initWithPlacementID:slotID];
+        MentaMediationInterstitial *interstitialAd = [[MentaMediationInterstitial alloc] initWithPlacementID:param.slotId];
         interstitialAd.delegate = customEvent;
         
         request.customObject = interstitialAd;
@@ -138,7 +142,7 @@
     if ([[MentaAdSDK shared] isInitialized]) {
         startBiddingRequest();
     } else {
-        [AnyThinkMentaInterstitialAdapter initMentaSDKWith:appID Key:appKey completion:^{
+        [AnyThinkMentaInterstitialAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
             startBiddingRequest();
         }];
     }

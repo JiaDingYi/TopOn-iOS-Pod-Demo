@@ -10,6 +10,7 @@
 #import "AnyThinkMentaNativeRender.h"
 #import "AnyThinkMentaBiddingManager.h"
 #import "AnyThinkMentaBiddingRequest.h"
+#import "AnyThinkMentaParam.h"
 #import <MentaMediationGlobal/MentaMediationGlobal-umbrella.h>
 
 @interface AnyThinkMentaNativeAdapter ()
@@ -28,17 +29,15 @@
 
 - (instancetype)initWithNetworkCustomInfo:(NSDictionary*)serverInfo
                                 localInfo:(NSDictionary*)localInfo {
-    self = [super init];
-    if (self != nil) {
-        NSString *appIDKey = @"appid";
-        if([serverInfo.allKeys containsObject:@"appId"]) {
-            appIDKey = @"appId";
-        }
-        NSString *appID = serverInfo[appIDKey];
-        NSString *appKey = serverInfo[@"appKey"];
-        
-        if (![[MentaAdSDK shared] isInitialized]) {
-            [AnyThinkMentaNativeAdapter initMentaSDKWith:appID Key:appKey completion:nil];
+    if (self = [super init]) {
+        AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+        NSError *appError = param.appError;
+        if (!appError) {
+            if (![[MentaAdSDK shared] isInitialized]) {
+                [AnyThinkMentaNativeAdapter initMentaSDKWith:param.appId Key:param.appKey completion:nil];
+            }
+        } else {
+            NSLog(@"%s . %@", __func__, appError);
         }
     }
     return self;
@@ -47,13 +46,17 @@
 - (void)loadADWithInfo:(NSDictionary*)serverInfo 
              localInfo:(NSDictionary*)localInfo
             completion:(void (^)(NSArray<NSDictionary *> *, NSError *))completion {
-    NSString *appIDKey = @"appid";
-    if([serverInfo.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:serverInfo];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
+        return;
     }
-    NSString *appID = serverInfo[appIDKey];
-    NSString *appKey = serverInfo[@"appKey"];
-    NSString *slotID = serverInfo[@"slotID"];
+    
     BOOL isExpress = [serverInfo[@"isExpressAd"] boolValue];
     NSString *bidId = serverInfo[kATAdapterCustomInfoBuyeruIdKey];
     
@@ -63,7 +66,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             // C2S
             if (bidId) {
-                AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingManager sharedInstance] getRequestItemWithUnitID:slotID];
+                AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingManager sharedInstance] getRequestItemWithUnitID:param.slotId];
                 if (request != nil && request.customObject) {
                     strongSelf.customEvent = (AnyThinkMentaNativeCustomEvent *)request.customEvent;
                     strongSelf.customEvent.requestCompletionBlock = completion;
@@ -75,12 +78,12 @@
                         strongSelf.nativeAd = (MentaMediationNativeSelfRender *)request.customObject;
                         [strongSelf.customEvent nativeSelfRenderAdLoadedWith:strongSelf.nativeAd nativeSelfRenderAdModel:request.nativeAds.firstObject];
                     }
-                    [[AnyThinkMentaBiddingManager sharedInstance] removeRequestItmeWithUnitID:slotID];
+                    [[AnyThinkMentaBiddingManager sharedInstance] removeRequestItmeWithUnitID:param.slotId];
                     return;
                 }
             } else {
                 strongSelf.customEvent = [[AnyThinkMentaNativeCustomEvent alloc] initWithInfo:serverInfo localInfo:localInfo];
-                strongSelf.customEvent.networkAdvertisingID = slotID;
+                strongSelf.customEvent.networkAdvertisingID = param.slotId;
                 strongSelf.customEvent.requestCompletionBlock = completion;
                 if (isExpress) {
                     CGSize adSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20.0, 300.0f);
@@ -88,13 +91,13 @@
                         adSize = [serverInfo[kATExtraInfoNativeAdSizeKey] CGSizeValue];
                     }
 
-                    strongSelf.nativeExpressAd = [[MentaMediationNativeExpress alloc] initWithPlacementID:slotID];
+                    strongSelf.nativeExpressAd = [[MentaMediationNativeExpress alloc] initWithPlacementID:param.slotId];
                     strongSelf.nativeExpressAd.delegate = strongSelf.customEvent;
                     
                     [strongSelf.nativeExpressAd loadAd];
                 } else {
                     // 自渲染
-                    strongSelf.nativeAd = [[MentaMediationNativeSelfRender alloc] initWithPlacementID:slotID];
+                    strongSelf.nativeAd = [[MentaMediationNativeSelfRender alloc] initWithPlacementID:param.slotId];
                     strongSelf.nativeAd.delegate = strongSelf.customEvent;
                     
                     [strongSelf.nativeAd loadAd];
@@ -106,7 +109,7 @@
     if ([[MentaAdSDK shared] isInitialized]) {
         load();
     } else {
-        [AnyThinkMentaNativeAdapter initMentaSDKWith:appID Key:appKey completion:^{
+        [AnyThinkMentaNativeAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
             load();
         }];
     }
@@ -120,34 +123,29 @@
                                 info:(NSDictionary*)info
                           completion:(void(^)(ATBidInfo *bidInfo, NSError *error))completion {
     NSLog(@"------> menta start bidding");
-    NSString *appIDKey = @"appid";
-    if([info.allKeys containsObject:@"appId"]) {
-        appIDKey = @"appId";
-    }
-    NSString *appID = info[appIDKey];
-    NSString *appKey = info[@"appKey"];
-    NSString *slotID = info[@"slotID"];
-    BOOL isExpress = [info[@"isExpressAd"] boolValue];
-    
-    if ((!appID || !appKey || !slotID) && completion != nil) {
-        NSError *err = [NSError errorWithDomain:@"com.menta.mediation.ios"
-                                           code:1
-                                       userInfo:@{NSLocalizedDescriptionKey:@"Bid request has failed", NSLocalizedFailureReasonErrorKey:@"Menta config is error"}];
-        completion( nil, err);
+    AnyThinkMentaParam *param = [[AnyThinkMentaParam alloc] initWithDictionary:info];
+    NSError *slotError = param.slotError;
+    if (slotError) {
+        NSLog(@"%s . %@", __func__, slotError);
+        if (completion) {
+            completion(nil, slotError);
+        }
+        
         return;
     }
+    BOOL isExpress = [info[@"isExpressAd"] boolValue];
     
-    [AnyThinkMentaNativeAdapter initMentaSDKWith:appID Key:appKey completion:^{
+    [AnyThinkMentaNativeAdapter initMentaSDKWith:param.appId Key:param.appKey completion:^{
         AnyThinkMentaNativeCustomEvent *customEvent = [[AnyThinkMentaNativeCustomEvent alloc] initWithInfo:info localInfo:info];
         customEvent.isC2SBiding = YES;
-        customEvent.networkAdvertisingID = slotID;
+        customEvent.networkAdvertisingID = param.slotId;
         
         AnyThinkMentaBiddingRequest *request = [[AnyThinkMentaBiddingRequest alloc] init];
         request.unitGroup = unitGroupModel;
         request.placementID = placementModel.placementID;
         request.customEvent = customEvent;
         request.bidCompletion = completion;
-        request.unitID = slotID;
+        request.unitID = param.slotId;
         request.extraInfo = info;
         request.adType = MentaAdFormatNative;
         
@@ -157,14 +155,14 @@
                 adSize = [info[kATExtraInfoNativeAdSizeKey] CGSizeValue];
             }
 
-            MentaMediationNativeExpress *nativeExpressAd = [[MentaMediationNativeExpress alloc] initWithPlacementID:slotID];
+            MentaMediationNativeExpress *nativeExpressAd = [[MentaMediationNativeExpress alloc] initWithPlacementID:param.slotId];
             nativeExpressAd.delegate = customEvent;
             
             request.customObject = nativeExpressAd;
             [nativeExpressAd loadAd];
         } else {
             // 自渲染
-            MentaMediationNativeSelfRender *nativeAd = [[MentaMediationNativeSelfRender alloc] initWithPlacementID:slotID];
+            MentaMediationNativeSelfRender *nativeAd = [[MentaMediationNativeSelfRender alloc] initWithPlacementID:param.slotId];
             nativeAd.delegate = customEvent;
             
             request.customObject = nativeAd;
