@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
-    s.name             = 'TPNMentaCustomAdapterNew'
+    s.name             = 'TPNMentaGlobalCustomAdapter'
     s.version          = '1.0.22'
-    s.summary          = 'TPNMentaCustomAdapter.'
-    s.description      = 'A short description of TPNMentaCustomAdapter'
+    s.summary          = 'TPNMentaGlobalCustomAdapter.'
+    s.description      = 'A short description of TPNMentaGlobalCustomAdapter'
     s.homepage         = 'https://github.com/jdy/TopOnDemo-global'
     s.license          = "Custom"
     s.author           = { 'jdy' => 'wzy2010416033@163.com' }
