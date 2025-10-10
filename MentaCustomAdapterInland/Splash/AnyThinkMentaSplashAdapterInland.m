@@ -201,15 +201,17 @@
 + (void)initMentaSDKWith:(NSString*)appID
                      Key:(NSString *)appKey
               completion:(void (^)(void))completion {
-    MentaLog(@"------> start init menta sdk");
-    [MUAPI enableLog:YES];
-    [MUAPI startWithAppID:appID
-                   appKey:appKey
-              finishBlock:^(BOOL success, NSError * _Nullable error) {
-        if (success && completion != nil) {
-            completion();
-        }
-    }];
+    NSLog(@"------> start init menta sdk");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MUAPI enableLog:NO];
+        [MUAPI startWithAppID:appID
+                       appKey:appKey
+                  finishBlock:^(BOOL success, NSError * _Nullable error) {
+            if (success && completion != nil) {
+                completion();
+            }
+        }];
+    });
 }
 
 + (MentaUnifiedSplashAd *)initSplashAdWith:(NSString *)slotID bottomView:(id)bottomView {
