@@ -20,6 +20,6 @@ Pod::Spec.new do |s|
     s.dependency 'MentaUnifiedSDK',   '~> 7.00.04'
     s.dependency 'MentaVlionSDK',     '~> 7.00.04'
     s.dependency 'MentaVlionAdapter', '~> 7.00.04'
-    s.dependency 'AnyThinkiOS'
+    s.dependency 'AnyThinkiOS', '6.4.87'
   
   end
