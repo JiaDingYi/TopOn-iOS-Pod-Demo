@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'AnyThinkMentaCustomAdapterInland'
-    s.version          = '6.00.39'
+    s.version          = '7.00.01'
     s.summary          = 'AnyThinkMentaCustomAdapterInland.'
     s.description      = 'This is the AnyThinkMentaCustomAdapterInland. Please proceed to https://www.mentamob.com for more information.'
     s.homepage         = 'https://www.mentamob.com/'
@@ -16,10 +16,10 @@ Pod::Spec.new do |s|
   
     s.source_files = 'MentaCustomAdapterInland/**/*'
 
-    s.dependency 'MentaVlionBaseSDK', '~> 6.00.39'
-    s.dependency 'MentaUnifiedSDK',   '~> 6.00.39'
-    s.dependency 'MentaVlionSDK',     '~> 6.00.39'
-    s.dependency 'MentaVlionAdapter', '~> 6.00.39'
+    s.dependency 'MentaVlionBaseSDK', '~> 7.00.04'
+    s.dependency 'MentaUnifiedSDK',   '~> 7.00.04'
+    s.dependency 'MentaVlionSDK',     '~> 7.00.04'
+    s.dependency 'MentaVlionAdapter', '~> 7.00.04'
     s.dependency 'AnyThinkiOS'
   
   end

@@ -216,7 +216,7 @@
     MUSplashConfig *config = [MUSplashConfig new];
     config.slotId = slotID;
     config.adSize = [UIScreen mainScreen].bounds.size;
-    config.tolerateTime = 5;
+    // config.tolerateTime = 5;
     if (bottomView && [bottomView isKindOfClass:[UIView class]]) {
         config.bottomView = (UIView *)bottomView;
     }
