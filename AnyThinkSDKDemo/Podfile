@@ -31,53 +31,14 @@ target 'AnyThinkSDKDemo' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   
+  # 国内Taku
+  # pod 'AnyThinkiOS'
+  # pod 'AnyThinkMentaCustomAdapterInland', :path => '../AnyThinkMentaCustomAdapterInland.podspec'
+  
   # 国内
-  # pod 'AnyThinkiOS','6.3.62'
-  # pod 'AnyThinkMentaCustomAdapter', :path => '../AnyThinkMentaCustomAdapter.podspec'
-  pod 'AnyThinkMentaCustomAdapterInland', :path => '../AnyThinkMentaCustomAdapterInland.podspec'
-  pod 'AnyThinkKuaiShouSDKAdapter'
-#  pod 'TPNMentaCustomAdapterInland', :path => '../TPNMentaCustomAdapterInland.podspec'
+  # pod 'AnyThinkMentaGlobalCustomAdapter', :path => '../AnyThinkMentaGlobalCustomAdapter.podspec'
   
-  #  pod 'MentaVlionBaseSDK', '6.00.30'
-  #  pod 'MentaUnifiedSDK',   '6.00.30'
-  #  pod 'MentaVlionSDK',     '6.00.30'
-  #  pod 'MentaVlionAdapter', '6.00.30'
-  #  pod 'MentaKSAdapter',    '6.00.31'
-   
-  
-#  pod 'MentaUnifiedSDK',    :path => '/Users/throwexception/Desktop/Menta-iOS/MentaUnifiedSDK.podspec'
-#  pod 'MentaVlionBaseSDK',  :path => '/Users/throwexception/Desktop/Menta-iOS/MentaVlionBaseSDK.podspec'
-#  pod 'MentaVlionSDK',      :path => '/Users/jdy/Desktop/menta_inland/MentaVlionSDK.podspec'
-#  pod 'MentaVlionAdapter',  :path => '/Users/throwexception/Desktop/Menta-iOS/MentaVlionAdapter.podspec'
- pod 'MentaKSAdapter',     :path => '/Users/jdy/Desktop/menta_inland/MentaKSAdapter.podspec'
-
-# pod 'MentaJDYunAdapter',  :path => '/Users/throwexception/Desktop/Menta-iOS/MentaJDYunAdapter.podspec'
-# pod 'MentaBaiduAdapter',  :path => '/Users/throwexception/Desktop/Menta-iOS/MentaBaiduAdapter.podspec'
-# pod 'MentaGDTAdapter',    :path => '/Users/throwexception/Desktop/Menta-iOS/MentaGDTAdapter.podspec'
-# pod 'MentaTanxAdapter',   :path => '/Users/throwexception/Desktop/Menta-iOS/MentaTanxAdapter.podspec'
-# pod 'MentaCSJAdapter',    :path => '/Users/throwexception/Desktop/Menta-iOS/MentaCSJAdapter.podspec'
-# pod 'MentaSigmobAdapter', :path => '/Users/throwexception/Desktop/Menta-iOS/MentaSigmobAdapter.podspec'
-# pod 'MentaIFLYAdapter',   :path => '/Users/throwexception/Desktop/Menta-iOS/MentaIFLYAdapter.podspec'
-# pod 'MentaWXminiAdapter', :path => '/Users/throwexception/Desktop/Menta-iOS/MentaWXminiAdapter.podspec'
-# pod 'MentaMeishuAdapter', :path => '/Users/throwexception/Desktop/Menta-iOS/MentaMeishuAdapter.podspec'
-# pod 'MentaJumoAdapter',   :path => '/Users/throwexception/Desktop/Menta-iOS/MentaJumoAdapter.podspec'
-  
-  #海外
-
-    # pod 'TPNiOS', '6.3.54'
-    # pod 'TPNMentaCustomAdapter', :path => '../TPNMentaCustomAdapter.podspec'
-    # pod 'TPNMentaCustomAdapterNew', :path => '../TPNMentaCustomAdapterNew.podspec'
-    
-    # pod 'MentaBaseGlobal',         '1.0.14'
-    # pod 'MentaVlionGlobal',        '1.0.14'
-    # pod 'MentaMediationGlobal',    '1.0.14'
-    # pod 'MentaVlionGlobalAdapter', '1.0.14'
-
-    # pod 'MentaVlionGlobal', :path => '/Users/throwexception/Desktop/Menta-Global/MentaVlionGlobal.podspec'
-    # pod 'MentaVlionGlobalAdapter', :path => '/Users/throwexception/Desktop/Menta-Global/MentaVlionGlobalAdapter.podspec'
-    # pod 'MentaMediationGlobal', :path => '/Users/throwexception/Desktop/Menta-Global/MentaMediationGlobal.podspec'
-    # pod 'MentaBaseGlobal', :path => '/Users/throwexception/Desktop/Menta-Global/MentaBaseGlobal.podspec'
-  
-    pod 'TianmuSDK'
+  # 海外TopOn(原名:TPNMentaCustomAdapterNew，新名未发布)
+  pod 'TPNMentaGlobalCustomAdapter', :path => '../TPNMentaGlobalCustomAdapter.podspec'
 
 end 
