@@ -39,17 +39,16 @@
 }
 
 - (NSDictionary<NSString *,NSString *> *)placementIDs_fullScreen {
-    
     return  @{
-        @"advlion":                   @"b661e4ab4be913", // 国内
-//        @"Menta": @"b6686446046aa8", // 海外
+        @"TakuCN": @"b661e4ab4be913", // 国内
+        @"TopOnGlobal": @"n68d3bc7e57712", // 海外
     };
 }
 
 - (NSDictionary<NSString *,NSString *> *)placementIDs_inter {
-    return @{
-//        @"advlion":                   @"b661e4ab4be913", // 国内
-        @"Menta": @"b6686446046aa8", // 海外
+    return  @{
+        @"TakuCN": @"b661e4ab4be913", // 国内
+        @"TopOnGlobal": @"n68d3bc7e57712", // 海外
     };
 }
 
