@@ -90,7 +90,7 @@
 }
 
 - (void)dealloc {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 @end

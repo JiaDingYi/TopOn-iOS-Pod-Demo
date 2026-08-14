@@ -73,7 +73,7 @@
                 AnyThinkMentaSplashBiddingDelegateInland *delegate = (AnyThinkMentaSplashBiddingDelegateInland *)self.splashView.delegate;
                 if (delegate.isReady) {
                     // 返回加载完成
-                    MentaLog(@"------> menta bidding success");
+                    MVlionLog(@"------> menta bidding success");
                     delegate.requestCompletionBlock = completion;
                     delegate.isReady = YES;
                     [delegate trackSplashAdLoaded:self.splashView];
@@ -139,7 +139,7 @@
                       unitGroupModel:(ATUnitGroupModel*)unitGroupModel
                                 info:(NSDictionary*)info
                           completion:(void(^)(ATBidInfo *bidInfo, NSError *error))completion {
-    MentaLog(@"------> menta start bidding");
+    MVlionLog(@"------> menta start bidding");
     NSString *appIDKey = @"appid";
     if([info.allKeys containsObject:@"appId"]) {
         appIDKey = @"appId";
@@ -180,7 +180,7 @@
 
 //// 返回广告位比价胜利时，第二的价格的回调，可在该回调中向三方平台返回竞胜价格  secondPrice：美元(USD)
 + (void) sendWinnerNotifyWithCustomObject:(id)customObject secondPrice:(NSString*)price userInfo:(NSDictionary<NSString *, NSString *> *)userInfo {
-    MentaLog(@"------> menta splash ad win");
+    MVlionLog(@"------> menta splash ad win");
     if ([customObject isKindOfClass:MentaUnifiedSplashAd.class]) {
         MentaUnifiedSplashAd *splashAd = (MentaUnifiedSplashAd *)customObject;
         [splashAd sendWinNotification];
@@ -189,7 +189,7 @@
 
 //// 返回广告位比价输了的回调，可在该回调中向三方平台返回竞败价格 winPrice：美元(USD)
 + (void)sendLossNotifyWithCustomObject:(nonnull id)customObject lossType:(ATBiddingLossType)lossType winPrice:(nonnull NSString *)price userInfo:(NSDictionary *)userInfo {
-    MentaLog(@"------> menta splash ad loss");
+    MVlionLog(@"------> menta splash ad loss");
     if ([customObject isKindOfClass:MentaUnifiedSplashAd.class]) {
         MentaUnifiedSplashAd *splashAd = (MentaUnifiedSplashAd *)customObject;
         [splashAd sendLossNotificationWithInfo:@{MU_M_L_WIN_PRICE : @([price integerValue] * 100)}];
@@ -227,7 +227,7 @@
 
 - (void)dealloc
 {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 @end

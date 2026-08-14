@@ -79,7 +79,7 @@
 
 /// 广告策略服务加载成功
 - (void)menta_didFinishLoadingADPolicy:(MentaUnifiedNativeExpressAd *_Nonnull)nativeExpressAd {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 /**
@@ -87,7 +87,7 @@
  @param unifiedNativeAdDataObjects 广告数据数组
  */
 - (void)menta_nativeExpressAdLoaded:(NSArray<MentaUnifiedNativeExpressAdObject *> * _Nullable)unifiedNativeAdDataObjects nativeExpressAd:(MentaUnifiedNativeExpressAd *_Nonnull)nativeExpressAd {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 
@@ -97,7 +97,7 @@
 @param error 错误
 */
 - (void)menta_nativeExpressAd:(MentaUnifiedNativeExpressAd *_Nonnull)nativeExpressAd didFailWithError:(NSError * _Nullable)error description:(NSDictionary *_Nonnull)description {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     NSError *err = [NSError errorWithDomain:@"com.menta.nativeExpress"
                                        code:100
@@ -119,7 +119,7 @@
  */
 - (void)menta_nativeExpressAdViewRenderSuccess:(MentaUnifiedNativeExpressAd *_Nonnull)nativeExpressAd 
                          nativeExpressAdObject:(MentaUnifiedNativeExpressAdObject *_Nonnull)nativeExpressAdObj {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     if (self.isC2SBiding) {
         AnyThinkMentaBiddingRequestInland *request = [[AnyThinkMentaBiddingManagerInland sharedInstance] getRequestItemWithUnitID:self.networkAdvertisingID];
@@ -148,7 +148,7 @@
  @param nativeExpressAd MentaUnifiedNativeExpressAd 实例,
  */
 - (void)nativeExpressAdViewRenderFail:(MentaUnifiedNativeExpressAd *_Nonnull)nativeExpressAd nativeExpressAdObject:(MentaUnifiedNativeExpressAdObject *_Nonnull)nativeExpressAdObj {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     NSError *err = [NSError errorWithDomain:@"com.menta.nativeExpress"
                                        code:100
                                    userInfo:@{}];
@@ -168,7 +168,7 @@
  @param nativeExpressAd MentaUnifiedNativeExpressAd 实例,
  */
 - (void)menta_nativeExpressAdViewWillExpose:(MentaUnifiedNativeExpressAd *_Nullable)nativeExpressAd nativeExpressAdObject:(MentaUnifiedNativeExpressAdObject *_Nonnull)nativeExpressAdObj {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     [self trackNativeAdImpression];
 }
 
@@ -178,7 +178,7 @@
  @param nativeExpressAd MentaUnifiedNativeExpressAd 实例,
  */
 - (void)menta_nativeExpressAdViewDidClick:(MentaUnifiedNativeExpressAd *_Nullable)nativeExpressAd nativeExpressAdObject:(MentaUnifiedNativeExpressAdObject *_Nonnull)nativeExpressAdObj {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     [self trackNativeAdClick];
 }
 
@@ -187,7 +187,7 @@
  @param nativeExpressAd MentaUnifiedNativeExpressAd 实例,
  */
 - (void)menta_nativeExpressAdDidClose:(MentaUnifiedNativeExpressAd *_Nonnull)nativeExpressAd nativeExpressAdObject:(MentaUnifiedNativeExpressAdObject *_Nonnull)nativeExpressAdObj {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     [self trackNativeAdClosed];
     [[AnyThinkMentaBiddingManagerInland sharedInstance] removeRequestItmeWithUnitID:self.networkAdvertisingID];
 }
@@ -199,7 +199,7 @@
  @param unifiedNativeAdDataObjects 广告数据数组
  */
 - (void)menta_nativeAdLoaded:(NSArray<MentaNativeObject *> * _Nullable)unifiedNativeAdDataObjects nativeAd:(MentaUnifiedNativeAd *_Nullable)nativeAd {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     if (self.isC2SBiding) {
         AnyThinkMentaBiddingRequestInland *request = [[AnyThinkMentaBiddingManagerInland sharedInstance] getRequestItemWithUnitID:self.networkAdvertisingID];
@@ -225,7 +225,7 @@
 
 /// 信息流自渲染加载失败
 - (void)menta_nativeAd:(MentaUnifiedNativeAd *_Nonnull)nativeAd didFailWithError:(NSError * _Nullable)error description:(NSDictionary *_Nonnull)description {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     NSError *err = [NSError errorWithDomain:@"com.menta.native"
                                        code:100
@@ -247,7 +247,7 @@
  @param adView 广告View
  */
 - (void)menta_nativeAdViewWillExpose:(MentaUnifiedNativeAd *_Nullable)nativeAd adView:(UIView<MentaNativeAdViewProtocol> *_Nonnull)adView {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     [self trackNativeAdImpression];
 }
@@ -258,7 +258,7 @@
  @param nativeAd MentaUnifiedNativeAd 实例,
  */
 - (void)menta_nativeAdViewDidClick:(MentaUnifiedNativeAd *_Nullable)nativeAd adView:(UIView<MentaNativeAdViewProtocol> *_Nullable)adView {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     [self trackNativeAdClick];
 }
@@ -268,7 +268,7 @@
  @param nativeAd MentaUnifiedNativeAd 实例,
  */
 - (void)menta_nativeAdDidClose:(MentaUnifiedNativeAd *_Nonnull)nativeAd adView:(UIView<MentaNativeAdViewProtocol> *_Nullable)adView {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
     
     [self trackNativeAdClosed];
     [[AnyThinkMentaBiddingManagerInland sharedInstance] removeRequestItmeWithUnitID:self.networkAdvertisingID];
@@ -280,7 +280,7 @@
  @param nativeAd MentaUnifiedNativeAd 实例,
  */
 - (void)menta_nativeAdDetailViewWillPresentScreen:(MentaUnifiedNativeAd *_Nullable)nativeAd adView:(UIView<MentaNativeAdViewProtocol> *_Nonnull)adView {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 /**
@@ -289,12 +289,12 @@
  @param nativeAd MentaUnifiedNativeAd 实例,
  */
 - (void)menta_nativeAdDetailViewClosed:(MentaUnifiedNativeAd *_Nullable)nativeAd adView:(UIView<MentaNativeAdViewProtocol> *_Nonnull)adView {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 - (void)dealloc
 {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 @end

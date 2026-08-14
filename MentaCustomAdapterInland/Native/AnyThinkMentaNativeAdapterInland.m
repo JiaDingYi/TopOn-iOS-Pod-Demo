@@ -127,7 +127,7 @@
                       unitGroupModel:(ATUnitGroupModel*)unitGroupModel
                                 info:(NSDictionary*)info
                           completion:(void(^)(ATBidInfo *bidInfo, NSError *error))completion {
-    MentaLog(@"------> menta start bidding");
+    MVlionLog(@"------> menta start bidding");
     NSString *appIDKey = @"appid";
     if([info.allKeys containsObject:@"appId"]) {
         appIDKey = @"appId";
@@ -192,7 +192,7 @@
 
 //// 返回广告位比价胜利时，第二的价格的回调，可在该回调中向三方平台返回竞胜价格  secondPrice：美元(USD)
 + (void) sendWinnerNotifyWithCustomObject:(id)customObject secondPrice:(NSString*)price userInfo:(NSDictionary<NSString *, NSString *> *)userInfo {
-    MentaLog(@"------> menta native ad win");
+    MVlionLog(@"------> menta native ad win");
     if ([customObject isKindOfClass:MentaUnifiedNativeExpressAd.class]) {
         MentaUnifiedNativeExpressAd *ad = (MentaUnifiedNativeExpressAd *)customObject;
         [ad sendWinNotification];
@@ -204,7 +204,7 @@
 
 //// 返回广告位比价输了的回调，可在该回调中向三方平台返回竞败价格 winPrice：美元(USD)
 + (void)sendLossNotifyWithCustomObject:(nonnull id)customObject lossType:(ATBiddingLossType)lossType winPrice:(nonnull NSString *)price userInfo:(NSDictionary *)userInfo {
-    MentaLog(@"------> menta native ad loss");
+    MVlionLog(@"------> menta native ad loss");
     if ([customObject isKindOfClass:MentaUnifiedNativeExpressAd.class]) {
         MentaUnifiedNativeExpressAd *nativeExpressAd = (MentaUnifiedNativeExpressAd *)customObject;
         [nativeExpressAd sendLossNotificationWithInfo:@{MU_M_L_WIN_PRICE : @([price integerValue] * 100)}];
@@ -219,7 +219,7 @@
 + (void)initMentaSDKWith:(NSString*)appID
                      Key:(NSString *)appKey
               completion:(void (^)(void))completion {
-    MentaLog(@"------> start init menta sdk");
+    MVlionLog(@"------> start init menta sdk");
     dispatch_async(dispatch_get_main_queue(), ^{
         [MUAPI enableLog:NO];
         [MUAPI startWithAppID:appID
@@ -234,7 +234,7 @@
 
 - (void)dealloc
 {
-    MentaLog(@"------> %s", __FUNCTION__);
+    MVlionLog(@"------> %s", __FUNCTION__);
 }
 
 @end
