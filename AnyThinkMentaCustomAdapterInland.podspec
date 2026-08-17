@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
     s.libraries = 'c++', 'resolv', 'z', 'sqlite3', 'bz2', 'xml2', 'iconv', 'c++abi'
     s.weak_frameworks = 'WebKit', 'AdSupport'
     s.static_framework = true
+    s.swift_versions = ['5.0']
   
     s.source_files = 'MentaCustomAdapterInland/**/*'
 
@@ -20,6 +21,6 @@ Pod::Spec.new do |s|
     s.dependency 'MentaUnifiedSDK',   '~> 7.01.00'
     s.dependency 'MentaVlionSDK',     '~> 7.01.00'
     s.dependency 'MentaVlionAdapter', '~> 7.01.00'
-    s.dependency 'AnyThinkiOS'
+    s.dependency 'AnyThinkiOS', '6.4.92'
   
   end
